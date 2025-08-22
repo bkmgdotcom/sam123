@@ -1,4 +1,4 @@
-name: Build NodeJS application
+name: _Reusable Build NodeJS application
 
 on:
   workflow_call:
@@ -65,9 +65,9 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
           JF_PROJECT: ${{ env.JF_PROJECT }}
 
-      - name: Setup Jfrog cli
-        run: jf c add jfrog-server --url=${{ env.JF_ARTIFACTORY_URL }} --access-token=${{ secrets.JF_ACCESS_TOKEN }}
-        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
+      #- name: Setup Jfrog cli
+      #  run: jf c add jfrog-server --url=${{ env.JF_ARTIFACTORY_URL }} --access-token=${{ secrets.JF_ACCESS_TOKEN }}
+      #  working-directory: ${{ env.JF_WORKING_DIRECTORY }}
 
       - name: Check environmental variables
         if: ${{ always() }}

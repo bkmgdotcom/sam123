@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   JFrog-NPM-build-deploy:
-    uses: bkmgdotcom/project-examples/.github/workflows/npm-build-publish.yml@main
+    uses: bkmgdotcom/project-examples/.github/workflows/_reusable-npm-build-publish.yml@main
     with:
       RUNS_ON: ${{ vars.RUNS_ON }}
       JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
