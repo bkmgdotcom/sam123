@@ -32,6 +32,10 @@ on:
         description: Remote npm repository
         type: string
         default: npm-remote
+      JF_WORKING_DIRECTORY:
+        description: Working directory for the build
+        type: string
+        default: npm-example
     secrets:
       JF_ACCESS_TOKEN:
         required: true
@@ -47,6 +51,7 @@ jobs:
       JF_APP_NAME: ${{ inputs.JF_APP_NAME }}
       JF_PROJECT: ${{ inputs.JF_PROJECT }}
       JF_PACKAGE_TAG: ${{ inputs.JF_PACKAGE_TAG }}
+      JF_WORKING_DIRECTORY: ${{ inputs.JF_WORKING_DIRECTORY }}
 
     runs-on: ${{ inputs.RUNS_ON }}
 
@@ -69,20 +74,23 @@ jobs:
 
       - name: JFrog NPM Configuration
         run: jf npm-config --repo-resolve=${{ env.JF_NPM_REMOTE_REPOSITORY }} --repo-deploy=${{ env.JF_NPM_LOCAL_REPOSITORY }}
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
 
       - name: Install NPM dependencies
-        run: jf npm install --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} 
+        run: jf npm install --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }}
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
 
       - name: Add environment variables
         run: jf rt bce --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
 
       - name: Add git information
         run: jf rt bag --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
 
       - name: Pack and publish the npm package
-        run: |
-          jf npm publish --project ${{ env.JF_PROJECT }} --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }}
+        run: jf npm publish --project ${{ env.JF_PROJECT }} --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }}
 
       - name: Publish to Artifactory
-        run: |
-          jf rt bp --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
+        run: jf rt bp --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
