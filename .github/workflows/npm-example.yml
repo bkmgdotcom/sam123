@@ -6,26 +6,16 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
-  JF_APP_NAME: ${{ vars.JF_APP_NAME }}
-  JF_PROJECT: ${{ vars.JF_PROJECT }}
-  JF_NPM_LOCAL_REPOSITORY: ${{ vars.JF_NPM_LOCAL_REPOSITORY }}
-  JF_NPM_REMOTE_REPOSITORY: ${{ vars.JF_NPM_REMOTE_REPOSITORY }}
-  JF_PACKAGE_TAG: ${{ github.event.workflow_run.head_sha }}
-  RUNS_ON: 'ubuntu-latest'
-
 jobs:
   JFrog-NPM-build-deploy:
-
     uses: bkmgdotcom/project-examples/.github/reusable/jfrog/npm-build-publish.yml@main
     with:
-      RUNS_ON: ${{ env.RUNS_ON }}
-      JF_ARTIFACTORY_URL: ${{ env.JF_ARTIFACTORY_URL }}
-      JF_PROJECT: ${{ env.JF_PROJECT }}
-      JF_APP_NAME: ${{ env.JF_APP_NAME }}
-      JF_NPM_LOCAL_REPOSITORY: ${{ env.JF_NPM_LOCAL_REPOSITORY }}
-      JF_NPM_REMOTE_REPOSITORY: ${{ env.JF_NPM_REMOTE_REPOSITORY }}
+      RUNS_ON: 'ubuntu-latest'
+      JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
+      JF_PROJECT: ${{ vars.JF_PROJECT }}
+      JF_APP_NAME: ${{ vars.JF_APP_NAME }}
+      JF_NPM_LOCAL_REPOSITORY: ${{ vars.JF_NPM_LOCAL_REPOSITORY }}
+      JF_NPM_REMOTE_REPOSITORY: ${{ vars.JF_NPM_REMOTE_REPOSITORY }}
       JF_PACKAGE_TAG: ${{ github.run_number }}_${{ github.run_id }}
     secrets:
       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
