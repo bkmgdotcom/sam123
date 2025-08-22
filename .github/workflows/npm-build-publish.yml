@@ -53,8 +53,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Install jfrog cli
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ env.JF_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_PROJECT: ${{ env.JF_PROJECT }}
+
       - name: Setup Jfrog cli
-        run: jf c add my-server --url=${{ env.JF_ARTIFACTORY_URL }} --access-token=${{ secrets.JF_ACCESS_TOKEN }}
+        run: jf c add jfrog-server --url=${{ env.JF_ARTIFACTORY_URL }} --access-token=${{ secrets.JF_ACCESS_TOKEN }}
 
       - name: Check environmental variables
         if: ${{ always() }}
