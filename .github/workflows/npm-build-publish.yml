@@ -54,18 +54,14 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Setup Jfrog cli
-        uses: jfrog/setup-jfrog-cli@v4
-        env:
-          JF_ARTIFACTORY_URL: ${{ env.JF_ARTIFACTORY_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-          JF_PROJECT: ${{ env.JF_PROJECT }}
+        run: jf c add my-server --url=${{ env.JF_ARTIFACTORY_URL }} --access-token=${{ secrets.JF_ACCESS_TOKEN }}
 
       - name: Check environmental variables
         if: ${{ always() }}
         run: printenv | sort -f
 
       - name: JFrog NPM Configuration
-        run: jf npm-config --server-id-resolve=default --server-id-deploy=default --repo-resolve=${{ env.JF_NPM_REMOTE_REPOSITORY }} --repo-deploy=${{ env.JF_NPM_LOCAL_REPOSITORY }}
+        run: jf npm-config --repo-resolve=${{ env.JF_NPM_REMOTE_REPOSITORY }} --repo-deploy=${{ env.JF_NPM_LOCAL_REPOSITORY }}
 
       - name: Install NPM dependencies
         run: jf npm install --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} 
