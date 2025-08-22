@@ -10,7 +10,7 @@ jobs:
   JFrog-NPM-build-deploy:
     uses: bkmgdotcom/project-examples/.github/workflows/npm-build-publish.yml@main
     with:
-      RUNS_ON: 'ubuntu-latest'
+      RUNS_ON: ${{ vars.RUNS_ON }}
       JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
       JF_PROJECT: ${{ vars.JF_PROJECT }}
       JF_APP_NAME: ${{ vars.JF_APP_NAME }}

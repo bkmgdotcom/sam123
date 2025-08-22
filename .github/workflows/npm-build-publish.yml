@@ -67,6 +67,7 @@ jobs:
 
       - name: Setup Jfrog cli
         run: jf c add jfrog-server --url=${{ env.JF_ARTIFACTORY_URL }} --access-token=${{ secrets.JF_ACCESS_TOKEN }}
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
 
       - name: Check environmental variables
         if: ${{ always() }}
