@@ -77,6 +77,7 @@ jobs:
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
         run: |
           jf npm-config --repo-resolve=${{ env.JF_NPM_REMOTE_REPOSITORY }} --repo-deploy=${{ env.JF_NPM_LOCAL_REPOSITORY }}
+          pwd
           cat .npmrc   # debug - make sure it's created
           jf npm install --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }}
           jf rt bce --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
