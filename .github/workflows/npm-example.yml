@@ -17,7 +17,7 @@ jobs:
       JF_NPM_LOCAL_REPOSITORY: ${{ vars.JF_NPM_LOCAL_REPOSITORY }}
       JF_NPM_REMOTE_REPOSITORY: ${{ vars.JF_NPM_REMOTE_REPOSITORY }}
       JF_PACKAGE_TAG: ${{ github.run_number }}_${{ github.run_id }}
-      JF_WORKING_DIRECTORY: ${{ vars.JF_WORKING_DIRECTORY }}
+      JF_WORKING_DIRECTORY: ${{ vars.JF_NPM_WORKING_DIRECTORY }}
     secrets:
       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
 
