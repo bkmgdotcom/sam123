@@ -1,4 +1,4 @@
-name: Reusable JFrog DOTNET Example
+name: Reusable JFrog DOTNET CORE Example
 on:
   [workflow_dispatch]
 
