@@ -81,7 +81,7 @@ jobs:
       - name: JFrog PYTHON Configuration
         run: |
           cd ${{ env.JF_WORKING_DIRECTORY }}
-          jf pip-config --repo-resolve=${{ env.JF_PYTHON_REMOTE_REPOSITORY }}
+          jf pip-config --repo-resolve=${{ env.JF_PYTHON_LOCAL_REPOSITORY }}
           pwd
           jf pip install -r requirements.txt --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} --module=${{ env.JF_PYTHON_MODULE_NAME }}
           python setup.py sdist bdist_wheel
