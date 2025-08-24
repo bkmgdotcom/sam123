@@ -20,14 +20,18 @@ on:
         description: JFrog Artifactory application name
         type: string
         default: my-app
-      JF_NPM_REPOSITORY:
-        description: Virtual npm repository
+      JF_NPM_LOCAL_REPOSITORY:
+        description: Local npm repository
         type: string
-        default: npm-virtual
+        default: npm-local
+      JF_NPM_REMOTE_REPOSITORY:
+        description: Remote npm repository
+        type: string
+        default: npm-remote
       JF_PACKAGE_TAG:
         description: Remote npm repository
         type: string
-        default: npm-tag
+        default: npm-remote
       JF_WORKING_DIRECTORY:
         description: Working directory for the build
         type: string
@@ -42,7 +46,8 @@ jobs:
     env:
       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
       JF_ARTIFACTORY_URL: ${{ inputs.JF_ARTIFACTORY_URL }}
-      JF_NPM_REPOSITORY: ${{ inputs.JF_NPM_REPOSITORY }}
+      JF_NPM_LOCAL_REPOSITORY: ${{ inputs.JF_NPM_LOCAL_REPOSITORY }}
+      JF_NPM_REMOTE_REPOSITORY: ${{ inputs.JF_NPM_REMOTE_REPOSITORY }}
       JF_APP_NAME: ${{ inputs.JF_APP_NAME }}
       JF_PROJECT: ${{ inputs.JF_PROJECT }}
       JF_PACKAGE_TAG: ${{ inputs.JF_PACKAGE_TAG }}
@@ -67,7 +72,7 @@ jobs:
       - name: JFrog NPM Configuration
         run: |
           cd ${{ env.JF_WORKING_DIRECTORY }}
-          jf npm-config --repo-resolve=${{ env.JF_NPM_REPOSITORY }} --repo-deploy=${{ env.JF_NPM_REPOSITORY }}
+          jf npm-config --repo-resolve=${{ env.JF_NPM_REMOTE_REPOSITORY }} --repo-deploy=${{ env.JF_NPM_LOCAL_REPOSITORY }}
           pwd
           jf npm install --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }}
           jf rt bce --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}

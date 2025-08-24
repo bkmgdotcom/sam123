@@ -20,14 +20,10 @@ on:
         description: JFrog Artifactory application name
         type: string
         default: my-app
-      JF_DOTNET_LOCAL_REPOSITORY:
-        description: Local dotnet repository
+      JF_DOTNET_REPOSITORY:
+        description: Virtual dotnet repository
         type: string
-        default: dotnet-local
-      JF_DOTNET_REMOTE_REPOSITORY:
-        description: Remote dotnet repository
-        type: string
-        default: dotnet-remote
+        default: dotnet-virtual
       JF_PACKAGE_TAG:
         description: Remote dotnet repository
         type: string
@@ -50,8 +46,7 @@ jobs:
     env:
       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
       JF_ARTIFACTORY_URL: ${{ inputs.JF_ARTIFACTORY_URL }}
-      JF_DOTNET_LOCAL_REPOSITORY: ${{ inputs.JF_DOTNET_LOCAL_REPOSITORY }}
-      JF_DOTNET_REMOTE_REPOSITORY: ${{ inputs.JF_DOTNET_REMOTE_REPOSITORY }}
+      JF_DOTNET_REPOSITORY: ${{ inputs.JF_DOTNET_REPOSITORY }}
       JF_APP_NAME: ${{ inputs.JF_APP_NAME }}
       JF_PROJECT: ${{ inputs.JF_PROJECT }}
       JF_PACKAGE_TAG: ${{ inputs.JF_PACKAGE_TAG }}
@@ -81,12 +76,12 @@ jobs:
       - name: JFrog NPM Configuration
         run: |
           cd ${{ env.JF_WORKING_DIRECTORY }}
-          jf dotnet-config --repo-resolve=${{ env.JF_DOTNET_REMOTE_REPOSITORY }}
+          jf dotnet-config --repo-resolve=${{ env.JF_DOTNET_REPOSITORY }}
           pwd
           jf dotnet restore --build-name=${{ env.JF_APP_NAME }} --build-number=${{ env.JF_PACKAGE_TAG }}
           jf audit --project ${{ env.JF_PROJECT }} 
           dotnet pack
-          jf rt u "*.nupkg" ${{ env.JF_DOTNET_LOCAL_REPOSITORY }} --build-name=${{ env.JF_APP_NAME }} --build-number=${{ env.JF_PACKAGE_TAG }} --project ${{ env.JF_PROJECT }} 
+          jf rt u "*.nupkg" ${{ env.JF_DOTNET_REPOSITORY }} --build-name=${{ env.JF_APP_NAME }} --build-number=${{ env.JF_PACKAGE_TAG }} --project ${{ env.JF_PROJECT }} 
           jf rt bce --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
           jf rt bp  --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
 

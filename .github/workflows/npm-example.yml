@@ -14,8 +14,7 @@ jobs:
       JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
       JF_PROJECT: ${{ vars.JF_PROJECT }}
       JF_APP_NAME: ${{ vars.JF_APP_NAME }}
-      JF_NPM_LOCAL_REPOSITORY: ${{ vars.JF_NPM_LOCAL_REPOSITORY }}
-      JF_NPM_REMOTE_REPOSITORY: ${{ vars.JF_NPM_REMOTE_REPOSITORY }}
+      JF_NPM_REPOSITORY: ${{ vars.JF_NPM_REPOSITORY }}
       JF_PACKAGE_TAG: T_${{ github.run_number }}_${{ github.run_id }}
       JF_WORKING_DIRECTORY: ${{ vars.JF_NPM_WORKING_DIRECTORY }}
     secrets:
