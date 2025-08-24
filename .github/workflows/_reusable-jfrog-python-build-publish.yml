@@ -20,20 +20,16 @@ on:
         description: JFrog Artifactory application name
         type: string
         default: my-app
-      JF_PYTHON_LOCAL_REPOSITORY:
-        description: Local npm repository
+      JF_PYTHON_REPOSITORY:
+        description: Virtual Python repository
         type: string
-        default: python-local
-      JF_PYTHON_REMOTE_REPOSITORY:
-        description: Remote npm repository
-        type: string
-        default: python-remote
+        default: python-virtual
       JF_PYTHON_MODULE_NAME:
         description: JFrog Artifactory Python module name
         type: string
         default: jfrog-python-example
       JF_PACKAGE_TAG:
-        description: Remote npm repository
+        description: Remote Python repository
         type: string
         default: tag_1234
       JF_WORKING_DIRECTORY:
@@ -50,8 +46,7 @@ jobs:
     env:
       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
       JF_ARTIFACTORY_URL: ${{ inputs.JF_ARTIFACTORY_URL }}
-      JF_PYTHON_LOCAL_REPOSITORY: ${{ inputs.JF_PYTHON_LOCAL_REPOSITORY }}
-      JF_PYTHON_REMOTE_REPOSITORY: ${{ inputs.JF_PYTHON_REMOTE_REPOSITORY }}
+      JF_PYTHON_REPOSITORY: ${{ inputs.JF_PYTHON_REPOSITORY }}
       JF_APP_NAME: ${{ inputs.JF_APP_NAME }}
       JF_PROJECT: ${{ inputs.JF_PROJECT }}
       JF_PYTHON_MODULE_NAME: ${{ inputs.JF_PYTHON_MODULE_NAME }}
@@ -81,11 +76,11 @@ jobs:
       - name: JFrog PYTHON Configuration
         run: |
           cd ${{ env.JF_WORKING_DIRECTORY }}
-          jf pip-config --repo-resolve=${{ env.JF_PYTHON_LOCAL_REPOSITORY }}
+          jf pip-config --repo-resolve=${{ env.JF_PYTHON_REPOSITORY }}
           pwd
           jf pip install -r requirements.txt --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} --module=${{ env.JF_PYTHON_MODULE_NAME }}
           python setup.py sdist bdist_wheel
-          jf rt u dist/ pypi/ --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} --module=${{ env.JF_PYTHON_MODULE_NAME }} --project ${{ env.JF_PROJECT }} 
+          jf rt u dist/ ${{ env.JF_PYTHON_REPOSITORY }}/ --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} --module=${{ env.JF_PYTHON_MODULE_NAME }} --project ${{ env.JF_PROJECT }} 
 
           jf rt bce --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
           jf rt bp  --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
