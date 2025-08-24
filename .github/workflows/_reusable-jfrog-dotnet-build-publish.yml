@@ -39,7 +39,7 @@ on:
       JF_WORKING_DIRECTORY:
         description: Working directory for the build
         type: string
-        default: dotnet-examples/multi-example
+        default: dotnet/multi-example
     secrets:
       JF_ACCESS_TOKEN:
         required: true

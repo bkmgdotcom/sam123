@@ -1,4 +1,4 @@
-name: JFrog DOTNET Example
+name: Reusable JFrog DOTNET Example
 on:
   [workflow_dispatch]
 
@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   JFrog-dotnet-build-deploy:
-    uses: bkmgdotcom/project-examples/.github/workflows/_reusable-dotnet-build-publish.yml@main
+    uses: bkmgdotcom/project-examples/.github/workflows/_reusable-jfrog-dotnet-build-publish.yml@main
     with:
       RUNS_ON: ${{ vars.RUNS_ON }}
       JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}

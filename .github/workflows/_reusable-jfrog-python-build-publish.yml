@@ -1,4 +1,4 @@
-name: _Reusable Build NodeJS application
+name: _Reusable Build Python application
 
 on:
   workflow_call:
@@ -20,22 +20,26 @@ on:
         description: JFrog Artifactory application name
         type: string
         default: my-app
-      JF_NPM_LOCAL_REPOSITORY:
+      JF_PYTHON_LOCAL_REPOSITORY:
         description: Local npm repository
         type: string
-        default: npm-local
-      JF_NPM_REMOTE_REPOSITORY:
+        default: python-local
+      JF_PYTHON_REMOTE_REPOSITORY:
         description: Remote npm repository
         type: string
-        default: npm-remote
+        default: python-remote
+      JF_PYTHON_MODULE_NAME:
+        description: JFrog Artifactory Python module name
+        type: string
+        default: jfrog-python-example
       JF_PACKAGE_TAG:
         description: Remote npm repository
         type: string
-        default: npm-remote
+        default: tag_1234
       JF_WORKING_DIRECTORY:
         description: Working directory for the build
         type: string
-        default: npm-example
+        default: python
     secrets:
       JF_ACCESS_TOKEN:
         required: true
@@ -46,10 +50,11 @@ jobs:
     env:
       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
       JF_ARTIFACTORY_URL: ${{ inputs.JF_ARTIFACTORY_URL }}
-      JF_NPM_LOCAL_REPOSITORY: ${{ inputs.JF_NPM_LOCAL_REPOSITORY }}
-      JF_NPM_REMOTE_REPOSITORY: ${{ inputs.JF_NPM_REMOTE_REPOSITORY }}
+      JF_PYTHON_LOCAL_REPOSITORY: ${{ inputs.JF_PYTHON_LOCAL_REPOSITORY }}
+      JF_PYTHON_REMOTE_REPOSITORY: ${{ inputs.JF_PYTHON_REMOTE_REPOSITORY }}
       JF_APP_NAME: ${{ inputs.JF_APP_NAME }}
       JF_PROJECT: ${{ inputs.JF_PROJECT }}
+      JF_PYTHON_MODULE_NAME: ${{ inputs.JF_PYTHON_MODULE_NAME }}
       JF_PACKAGE_TAG: ${{ inputs.JF_PACKAGE_TAG }}
       JF_WORKING_DIRECTORY: ${{ inputs.JF_WORKING_DIRECTORY }}
 
@@ -69,14 +74,22 @@ jobs:
         if: ${{ always() }}
         run: printenv | sort -f
 
-      - name: JFrog NPM Configuration
+      - name: Install Wheel
+        run: |
+          python -m pip install wheel
+
+      - name: JFrog PYTHON Configuration
         run: |
           cd ${{ env.JF_WORKING_DIRECTORY }}
-          jf npm-config --repo-resolve=${{ env.JF_NPM_REMOTE_REPOSITORY }} --repo-deploy=${{ env.JF_NPM_LOCAL_REPOSITORY }}
+          jf pip-config --repo-resolve=${{ env.JF_PYTHON_REMOTE_REPOSITORY }}
           pwd
-          jf npm install --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }}
+          jf pip install -r requirements.txt --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} --module=${{ env.JF_PYTHON_MODULE_NAME }}
+          python setup.py sdist bdist_wheel
+          jf rt u dist/ pypi/ --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }} --module=${{ env.JF_PYTHON_MODULE_NAME }} --project ${{ env.JF_PROJECT }} 
+
           jf rt bce --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
-          jf rt bag --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
-          jf npm publish --project ${{ env.JF_PROJECT }} --build-name ${{ env.JF_APP_NAME }} --build-number ${{ env.JF_PACKAGE_TAG }}
-          jf rt bp --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
-        
+          jf rt bp  --project ${{ env.JF_PROJECT }} ${{ env.JF_APP_NAME }} ${{ env.JF_PACKAGE_TAG }}
+          jf pip install ${{ env.JF_PYTHON_MODULE_NAME }}
+          pip show ${{ env.JF_PYTHON_MODULE_NAME }}
+
+
