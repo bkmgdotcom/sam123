@@ -17,11 +17,12 @@ jobs:
           JF_USER_NAME: ${{ vars.JF_USER_NAME }}
           JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
           JF_PYTHON_REPOSITORY: ${{ vars.JF_PYTHON_REPOSITORY }}
+          JF_DOCKER_REPOSITORY: ${{ vars.JF_DOCKERREPOSITORY }}
           JF_APP_NAME: ${{ vars.JF_APP_NAME }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_PYTHON_MODULE_NAME: ${{ vars.JF_PYTHON_MODULE_NAME }}
           JF_PACKAGE_TAG: ${{ vars.JF_PACKAGE_TAG }}
-          JF_WORKING_DIRECTORY: ${{ vars.JF_WORKING_DIRECTORY }}
+          JF_WORKING_DIRECTORY: ${{ vars.JF_SOLENG_WORKING_DIRECTORY }}
         outputs:
           image: ${{ env.JF_ARTIFACTORY_URL }}/${{ env.JF_PYTHON_REPOSITORY }}/${{ env.JF_APP_NAME }}
           digest: ${{ steps.build.outputs.digest }}
@@ -80,18 +81,18 @@ jobs:
               with:
                 push: true
                 platforms: linux/amd64 #, linux/arm64
-                tags: ${{ env.JF_ARTIFACTORY_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}     
+                tags: ${{ env.JF_ARTIFACTORY_URL }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}     
                 
                         
             - name: docker scan
               run: |  
-                 jf docker pull ${{ env.JF_ARTIFACTORY_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
-                 jf docker scan ${{ env.JF_ARTIFACTORY_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}                               
+                 jf docker pull ${{ env.JF_ARTIFACTORY_URL }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}
+                 jf docker scan ${{ env.JF_ARTIFACTORY_URL }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}                               
 
             - name: add docker package to build
               run: |  
                  echo "${{ env.JF_ARTIFACTORY_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
-                 jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json 
+                 jf rt build-docker-create ${{ env.JF_DOCKER_REPOSITORY }} --image-file metadata.json 
                  
             - name: publish build info
               run: |
