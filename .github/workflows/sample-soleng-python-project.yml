@@ -65,7 +65,7 @@ jobs:
             - name: publish python package
               run: |
                 cd ${{ env.JF_WORKING_DIRECTORY }}
-                jf rt u dist/ ${{ env.JF_DOCKER_DOMAIN }}/${{ env.JF_APP_NAME }}/ --module=${{ env.JF_PYTHON_MODULE_NAME }} --project ${{ env.JF_PROJECT }} 
+                jf rt u dist/ ${{ env.JF_ARTIFACTORY_URL }}/${{ env.JF_APP_NAME }}/ --module=${{ env.JF_PYTHON_MODULE_NAME }} --project ${{ env.JF_PROJECT }} 
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3    
