@@ -8,6 +8,7 @@ permissions:
   packages: write # for uploading attestations.
   contents: read #Ability to read the contents permission
   security-events: write # Required for uploading code scanning 
+  id-token: write      # required for SLSA generator
 jobs:
     build-publish-python:
         runs-on: ubuntu-latest
@@ -103,7 +104,7 @@ jobs:
             
     provenance:
       needs: [build-publish-python]
-      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v1.10.0
+      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
       with:
         image:  ${{ needs.build-publish-python.outputs.image }}
         digest: ${{ needs.build-publish-python.outputs.digest }}
