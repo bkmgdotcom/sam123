@@ -17,7 +17,7 @@ jobs:
           JF_USER_NAME: ${{ vars.JF_USER_NAME }}
           JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
           JF_PYTHON_REPOSITORY: ${{ vars.JF_PYTHON_REPOSITORY }}
-          JF_DOCKER_REPOSITORY: ${{ vars.JF_DOCKERREPOSITORY }}
+          JF_DOCKER_REPOSITORY: ${{ vars.JF_DOCKER_REPOSITORY }}
           JF_APP_NAME: ${{ vars.JF_APP_NAME }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_PYTHON_MODULE_NAME: ${{ vars.JF_PYTHON_MODULE_NAME }}
