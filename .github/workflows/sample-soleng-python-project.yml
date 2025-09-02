@@ -53,7 +53,9 @@ jobs:
                 wheel -h
                 pip show setuptools
                 echo $VIRTUAL_ENV
-                
+                echo "AABB"
+                echo $JF_DOCKER_DOMAIN
+
             - name: build project
               run: |                      
                 pwd
