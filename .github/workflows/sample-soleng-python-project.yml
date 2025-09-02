@@ -117,9 +117,9 @@ jobs:
             
     provenance:
       needs: [build-publish-python]
-      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v1.10.0
+      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
       with:
-        image:  ${{ needs.build-publish-python.outputs.image }}
+        image:  ${{ env.JF_DOCKER_DOMAIN }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.JF_APP_NAME }}:${{ env.JF_PACKAGE_TAG }}
         digest: ${{ needs.build-publish-python.outputs.digest }}
         private-repository: true
       secrets:
