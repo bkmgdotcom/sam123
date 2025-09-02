@@ -86,6 +86,7 @@ jobs:
               id: build
               with:
                 push: true
+                context: ${{ env.JF_WORKING_DIRECTORY }}
                 platforms: linux/amd64 #, linux/arm64
                 tags: ${{ env.JF_DOCKER_DOMAIN }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.JF_APP_NAME }}:${{ env.JF_PACKAGE_TAG }}     
                 build-args: |
@@ -95,21 +96,25 @@ jobs:
 
             - name: docker scan
               run: |  
+                 cd ${{ env.JF_WORKING_DIRECTORY }}
                  jf docker pull ${{ env.JF_DOCKER_DOMAIN }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.JF_APP_NAME }}:${{ env.JF_PACKAGE_TAG }}    
                  jf docker scan ${{ env.JF_DOCKER_DOMAIN }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.JF_APP_NAME }}:${{ env.JF_PACKAGE_TAG }}                               
 
             - name: add docker package to build
               run: |  
+                 cd ${{ env.JF_WORKING_DIRECTORY }}
                  echo "${{ env.JF_DOCKER_DOMAIN }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
                  jf rt build-docker-create ${{ env.JF_DOCKER_REPOSITORY }} --image-file metadata.json 
                  
             - name: publish build info
               run: |
+                cd ${{ env.JF_WORKING_DIRECTORY }}
                 jf rt bce 
                 jf rt bp
                 
             - name: build scan
               run: |            
+                cd ${{ env.JF_WORKING_DIRECTORY }}
                 jf build-scan --fail=false
             
     provenance:
