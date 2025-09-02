@@ -103,7 +103,7 @@ jobs:
             - name: add docker package to build
               run: |  
                  cd ${{ env.JF_WORKING_DIRECTORY }}
-                 echo "${{ env.JF_DOCKER_DOMAIN }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.JF_APP_NAME }}:${{ env.JF_PACKAGE_TAG }}" > metadata.json
+                 echo "${{ env.JF_DOCKER_DOMAIN }}/${{ env.JF_DOCKER_REPOSITORY }}/${{ env.JF_APP_NAME }}:${{ env.JF_PACKAGE_TAG }}@${{ steps.build.outputs.digest }}" > metadata.json
                  jf rt build-docker-create ${{ env.JF_DOCKER_REPOSITORY }} --image-file metadata.json 
                  
             - name: publish build info
