@@ -54,8 +54,6 @@ jobs:
                 wheel -h
                 pip show setuptools
                 echo $VIRTUAL_ENV
-                echo "AABB"
-                echo ${{ env.JF_DOCKER_DOMAIN }}
 
             - name: build project
               run: |                      
@@ -82,7 +80,7 @@ jobs:
     
                 
             - name: Build Docker image    
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               id: build
               with:
                 push: true
@@ -119,7 +117,7 @@ jobs:
             
     provenance:
       needs: [build-publish-python]
-      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
+      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v1.10.0
       with:
         image:  ${{ needs.build-publish-python.outputs.image }}
         digest: ${{ needs.build-publish-python.outputs.digest }}
