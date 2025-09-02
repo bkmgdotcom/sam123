@@ -43,9 +43,9 @@ jobs:
               run: |
                 cd ${{ env.JF_WORKING_DIRECTORY }}
                 jf pip-config --repo-resolve=${{ env.JF_PYTHON_REPOSITORY }}  
-                URL=$(echo ${{ vars.ARTIFACTORY_URL }} | sed 's|^https://||')
+                URL=$(echo ${{ JF_ARTIFACTORY_URL }} | sed 's|^https://||')
                 echo "JF_DOCKER_DOMAIN=$URL" >> $GITHUB_ENV
-                echo "$URL"
+
 
             - name: configure environment
               run: |                      
