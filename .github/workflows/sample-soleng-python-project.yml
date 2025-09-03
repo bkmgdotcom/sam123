@@ -9,8 +9,17 @@ permissions:
   contents: read #Ability to read the contents permission
   security-events: write # Required for uploading code scanning 
   id-token: write      # required for SLSA generator
+
 jobs:
     build-publish-python:
+        permissions:
+      # Needed to upload the results to code-scanning dashboard.
+          security-events: write
+      # Used to receive a badge. (Upcoming feature)
+          id-token: write
+      # Needs for private repositories.
+          contents: read
+          actions: read
         runs-on: ubuntu-latest
         env:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
