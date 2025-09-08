@@ -21,9 +21,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install JFrog CLI
-        run: |
-          choco install jfrog-cli
+    #  - name: Install JFrog CLI
+    #    run: |
+    #      choco install jfrog-cli
 
       - name: Install jfrog cli
         uses: jfrog/setup-jfrog-cli@v4
@@ -35,6 +35,7 @@ jobs:
       - name: Build and Publish MsbuildLibrary
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
         run: |
+          dir "C:\Program Files\Microsoft Visual Studio\2022" -Recurse -Filter MSBuild.exe
           msbuild /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
           msbuild /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
 
