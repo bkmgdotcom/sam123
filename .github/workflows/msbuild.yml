@@ -1,0 +1,53 @@
+name: CI – MSBuild + Artifactory
+
+on:
+  [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ${{ vars.RUNS_ON_WIN }}
+
+    env:
+      JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+      JF_USER_NAME: ${{ vars.JF_USER_NAME }}
+      JF_ARTIFACTORY_URL: ${{ vars.JF_ARTIFACTORY_URL }}
+      JF_NUGET_REPOSITORY: ${{ vars.JF_NUGET_REPOSITORY }}
+      JF_APP_NAME: ${{ vars.JF_APP_NAME }}
+      JF_PROJECT: ${{ vars.JF_PROJECT }}
+      JF_PACKAGE_TAG: T_${{ github.run_number }}_${{ github.run_id }}
+      JF_WORKING_DIRECTORY: ${{ vars.JF_MSBUILD_WORKING_DIRECTORY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install JFrog CLI
+        run: |
+          choco install jfrog-cli
+
+      - name: Install jfrog cli
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ env.JF_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_PROJECT: ${{ env.JF_PROJECT }}
+
+      - name: Build and Publish MsbuildLibrary
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
+        run: |
+          msbuild /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+          msbuild /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+
+      - name: Build and Publish MsbuildExample
+        working-directory: ${{ env.JF_WORKING_DIRECTORY }}
+        run: |
+          msbuild /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+          msbuild /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+
+      - name: Publish Build Info for MsbuildLibrary
+        run: |
+          jfrog rt bp "${{ env.JF_APP_NAME }}-Library" ${{ env.JF_PACKAGE_TAG }}
+
+      - name: Publish Build Info for MsbuildExample
+        run: |
+          jfrog rt bp "${{ env.JF_APP_NAME }}-Example" ${{ env.JF_PACKAGE_TAG }}
