@@ -33,16 +33,8 @@ jobs:
           JF_PROJECT: ${{ env.JF_PROJECT }}
 
       - name: Install .NET Framework 4.6.1 Developer Pack
-        run: |
-           $url = "https://download.microsoft.com/download/details.aspx?id=49978"
-           # Download the page and scrape the actual executable download URL
-           $html = Invoke-WebRequest -Uri $url
-           $exeUrl = ($html.Links |
-           Where-Object href -Match 'NDP461-DevPack-KB3105179-ENU.exe').href
-           Write-Host "Downloading Developer Pack from $exeUrl"
-           Invoke-WebRequest -Uri $exeUrl -OutFile dotnet461.exe
-           Start-Process -Wait -FilePath .\dotnet461.exe -ArgumentList "/quiet", "/norestart"
-        shell: pwsh
+        shell: powershell
+        run: choco install dotnet4.6.1-devpack --yes --no-progress
 
       - name: Build and Publish MsbuildLibrary
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
