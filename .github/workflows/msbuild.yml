@@ -31,6 +31,12 @@ jobs:
           JF_URL: ${{ env.JF_ARTIFACTORY_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
           JF_PROJECT: ${{ env.JF_PROJECT }}
+          
+      - name: Install .NET Framework 4.6.1 Developer Pack
+        run: |
+           Invoke-WebRequest -Uri https://download.microsoft.com/download/2/4/7/2473AB35-35AE-40DD-982A-0A2A3A263B0F/NDP461-DevPack-KB3105179-ENU.exe -OutFile dotnet461.exe
+           Start-Process -Wait -FilePath .\dotnet461.exe -ArgumentList "/quiet", "/norestart"
+        shell: pwsh
 
       - name: Build and Publish MsbuildLibrary
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
