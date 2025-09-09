@@ -36,14 +36,14 @@ jobs:
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
         run: |
           dir "C:\Program Files\Microsoft Visual Studio\2022" -Recurse -Filter MSBuild.exe
-          msbuild /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
-          msbuild /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
 
       - name: Build and Publish MsbuildExample
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
         run: |
-          msbuild /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
-          msbuild /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
 
       - name: Publish Build Info for MsbuildLibrary
         run: |
