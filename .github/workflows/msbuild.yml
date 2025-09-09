@@ -36,6 +36,10 @@ jobs:
         shell: powershell
         run: choco install dotnet4.6.1-devpack --yes --no-progress
 
+      - name: Install .NET Framework 4.6.1 Developer Pack
+        shell: powershell
+        run: jf nuget-config --repo-resolve=${{ env.JF_NUGET_REPOSITORY }}
+
       - name: Build and Publish MsbuildLibrary
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
         shell: pwsh
