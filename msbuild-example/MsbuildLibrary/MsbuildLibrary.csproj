@@ -36,7 +36,7 @@
     <Exec Command="jfrog rt upload $(ArtifatsPatternPath) repository/destination/path $(BuildFlags)"/>
     -->
     
-    <Exec Command="jfrog rt upload $(ArtifatsPatternPath) msbuild-local/$(BuildName)/ --flat=false $(BuildFlags)"/>
+    <Exec Command="jfrog rt upload $(ArtifatsPatternPath) dis-4343-generic-local/$(BuildName)/ --flat=false $(BuildFlags)"/>
   </Target>
 
   <Target Name="PublishBuildInfo" AfterTargets="AfterBuild;UploadArtifacts" Condition=" '$(ArtifactoryPublish)' == 'true' ">
