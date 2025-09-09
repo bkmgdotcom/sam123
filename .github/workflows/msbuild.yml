@@ -34,16 +34,25 @@ jobs:
 
       - name: Build and Publish MsbuildLibrary
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
+        shell: pwsh
         run: |
-          dir "C:\Program Files\Microsoft Visual Studio\2022" -Recurse -Filter MSBuild.exe
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Library" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+            $msbuild = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+            $buildName = "${{ env.JF_APP_NAME }}-Library"
+            $buildNumber = "${{ env.JF_PACKAGE_TAG }}"
+
+            & $msbuild /t:build /p:BuildName="$buildName" /p:BuildNumber=$buildNumber
+            & $msbuild /p:ArtifactoryPublish=true /p:BuildName="$buildName" /p:BuildNumber=$buildNumber
 
       - name: Build and Publish MsbuildExample
         working-directory: ${{ env.JF_WORKING_DIRECTORY }}
+        shell: pwsh
         run: |
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:build /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:ArtifactoryPublish=true /p:BuildName="${{ env.JF_APP_NAME }}-Example" /p:BuildNumber=${{ env.JF_PACKAGE_TAG }}
+          $msbuild = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+          $buildName = "${{ env.JF_APP_NAME }}-Example"
+          $buildNumber = "${{ env.JF_PACKAGE_TAG }}"
+
+          & $msbuild /t:build /p:BuildName="$buildName" /p:BuildNumber=$buildNumber
+          & $msbuild /p:ArtifactoryPublish=true /p:BuildName="$buildName" /p:BuildNumber=$buildNumber
 
       - name: Publish Build Info for MsbuildLibrary
         run: |
