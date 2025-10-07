@@ -49,8 +49,10 @@ jobs:
           #     of the value entered here.
           publish_results: false
 
-          # (Optional) Uncomment file_mode if you have a .gitattributes with files marked export-ignore
-          # file_mode: git
+      - name: search and replace
+        run: |
+          sed -i 's/bkmgdotcom/HMHODD/g' results.json 
+          sed -i 's/sam123/takeatest/g' results.json 
 
       # Upload the results as artifacts (optional). Commenting out will disable uploads of run results in SARIF
       # format to the repository Actions tab.
