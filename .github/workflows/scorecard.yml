@@ -72,7 +72,6 @@ jobs:
 #          sarif_file: results.sarif
 
       - name: Request GitHub OIDC token for Scorecard
-        id: oidc
         run: |
           echo "Requesting GitHub OIDC token for audience=scorecard.dev..."
           TOKEN=$(curl -sSL \
@@ -87,26 +86,11 @@ jobs:
 
           echo "OIDC_TOKEN=$TOKEN" >> $GITHUB_ENV
           echo "✅ Token successfully retrieved."
-          
-      - name: Prepare and upload Scorecard results
-        env:
-          OIDC_TOKEN: ${{ env.OIDC_TOKEN }}
-          ORG: "HMHODD"
-          REPO: "takeatest"
-        run: |
-          RESULT_JSON=$(jq -Rs . < ./results.json)
-          cat > payload.json <<EOF
-          {
-            "accessToken": "${OIDC_TOKEN}",
-            "branch": "main",
-            "result": ${RESULT_JSON},
-            "tlogIndex": 0
-          }
-          EOF
 
-          echo "Uploading verified Scorecard result..."
-          curl -v -X POST \
-            -H "Authorization: Bearer ${OIDC_TOKEN}" \
+      - name: Upload verified Scorecard result
+        run: |
+          echo "📤 Uploading verified Scorecard result..."
+          curl -v -X POST "https://api.scorecard.dev/projects/github.com/HMHODD/takeatest" \
             -H "Content-Type: application/json" \
-            --data-binary @payload.json \
-            https://api.scorecard.dev/projects/github.com/${ORG}/${REPO}
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            --data-binary "@result.json"
