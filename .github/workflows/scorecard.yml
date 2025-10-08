@@ -88,10 +88,24 @@ jobs:
           echo "✅ Token successfully retrieved."
           echo "$TOKEN" | cut -d. -f2 | base64 -d | jq
 
+
+
       - name: Upload verified Scorecard result
         run: |
           echo "📤 Uploading verified Scorecard result..."
+
+          # Build correct JSON payload
+          jq -n --arg token "$OIDC_TOKEN" \
+            --argjson result "$(jq . < ./results.json)" \
+            '{
+              accessToken: $token,
+              branch: "main",
+              result: ($result | tojson),
+              tlogIndex: 0
+            }' > payload.json
+
+          echo "Payload prepared, posting to Scorecard API..."
           curl -v -X POST "https://api.scorecard.dev/projects/github.com/bkmgdotcom/sam123" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $OIDC_TOKEN" \
-            --data-binary "@results.json"
+            --data-binary "@payload.json"
