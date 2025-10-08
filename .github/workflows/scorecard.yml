@@ -70,17 +70,21 @@ jobs:
 #        with:
 #          sarif_file: results.sarif
 
-      - name: Publish to Scorecard.dev
+      - name: Get GitHub OIDC token
+        id: oidc
+        run: |
+          echo "Requesting GitHub OIDC token for audience=scorecard.dev..."
+          TOKEN=$(curl -sSL -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=scorecard.dev" | jq -r '.value')
+          echo "OIDC_TOKEN=$TOKEN" >> $GITHUB_ENV
+
+      - name: Prepare and upload Scorecard results
         env:
-          OIDC_TOKEN: "NONE"
+          OIDC_TOKEN: ${{ env.OIDC_TOKEN }}
           ORG: "HMHODD"
           REPO: "takeatest"
         run: |
-          echo "Preparing payload..."
-
-          # Read the file as a single JSON string (escaped properly)
           RESULT_JSON=$(jq -Rs . < ./results.json)
-
           cat > payload.json <<EOF
           {
             "accessToken": "${OIDC_TOKEN}",
@@ -96,4 +100,3 @@ jobs:
             -H "Content-Type: application/json" \
             --data-binary @payload.json \
             https://api.scorecard.dev/projects/github.com/${ORG}/${REPO}
-
