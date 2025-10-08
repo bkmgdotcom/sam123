@@ -72,19 +72,25 @@ jobs:
 
       - name: Publish to Scorecard.dev
         env:
-          OIDC_TOKEN: "NONE"
+          OIDC_TOKEN: "NONE"  # replace later with real OIDC token or 'id-token: write' setup
           ORG: "HMHODD"
           REPO: "takeatest"
         run: |
-          echo "Uploading verified Scorecard result..."
-          curl -X POST \
-            -H "Authorization: Bearer ${OIDC_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -d @- https://api.scorecard.dev/projects/github.com/${ORG}/${REPO} <<EOF
+          echo "Preparing payload..."
+          RESULT_JSON=$(jq -c . < ./results.json)
+
+          cat > payload.json <<EOF
           {
             "accessToken": "${OIDC_TOKEN}",
             "branch": "main",
-            "result": "$(jq -c . < ./results.json)",
+            "result": ${RESULT_JSON},
             "tlogIndex": 0
           }
           EOF
+
+          echo "Uploading verified Scorecard result..."
+          curl -v -X POST \
+            -H "Authorization: Bearer ${OIDC_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data-binary @payload.json \
+            https://api.scorecard.dev/projects/github.com/${ORG}/${REPO}
