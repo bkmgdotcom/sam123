@@ -91,7 +91,7 @@ jobs:
       - name: Upload verified Scorecard result
         run: |
           echo "📤 Uploading verified Scorecard result..."
-          curl -v -X POST "https://api.scorecard.dev/projects/github.com/HMHODD/takeatest" \
+          curl -v -X POST "https://api.scorecard.dev/projects/github.com/bkmgdotcom/sam123" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $OIDC_TOKEN" \
             --data-binary "@results.json"
