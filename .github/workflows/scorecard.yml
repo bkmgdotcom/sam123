@@ -93,4 +93,4 @@ jobs:
           curl -v -X POST "https://api.scorecard.dev/projects/github.com/HMHODD/takeatest" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $OIDC_TOKEN" \
-            --data-binary "@result.json"
+            --data-binary "@results.json"
