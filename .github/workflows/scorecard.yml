@@ -96,13 +96,13 @@ jobs:
 
           # Build correct JSON payload
           jq -n --arg token "$OIDC_TOKEN" \
-            --argjson result "$(jq . < ./results.json)" \
-            '{
-              accessToken: $token,
-              branch: "main",
-              result: ($result | tojson),
-              tlogIndex: 0
-            }' > payload.json
+          --arg result "$(jq -c . < ./results.json)" \
+          '{
+            accessToken: $token,
+            branch: "main",
+            result: $result,
+            tlogIndex: 0
+          }' > payload.json
 
           echo "Payload prepared, posting to Scorecard API..."
           curl -v -X POST "https://api.scorecard.dev/projects/github.com/bkmgdotcom/sam123" \
