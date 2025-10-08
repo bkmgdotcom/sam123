@@ -86,6 +86,7 @@ jobs:
 
           echo "OIDC_TOKEN=$TOKEN" >> $GITHUB_ENV
           echo "✅ Token successfully retrieved."
+          echo "$OIDC_TOKEN" | cut -d. -f2 | base64 -d | jq
 
       - name: Upload verified Scorecard result
         run: |
