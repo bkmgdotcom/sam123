@@ -72,12 +72,14 @@ jobs:
 
       - name: Publish to Scorecard.dev
         env:
-          OIDC_TOKEN: "NONE"  # replace later with real OIDC token or 'id-token: write' setup
+          OIDC_TOKEN: "NONE"
           ORG: "HMHODD"
           REPO: "takeatest"
         run: |
           echo "Preparing payload..."
-          RESULT_JSON=$(jq -c . < ./results.json)
+
+          # Read the file as a single JSON string (escaped properly)
+          RESULT_JSON=$(jq -Rs . < ./results.json)
 
           cat > payload.json <<EOF
           {
@@ -94,3 +96,4 @@ jobs:
             -H "Content-Type: application/json" \
             --data-binary @payload.json \
             https://api.scorecard.dev/projects/github.com/${ORG}/${REPO}
+
