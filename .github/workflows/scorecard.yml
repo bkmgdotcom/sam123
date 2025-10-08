@@ -92,20 +92,28 @@ jobs:
 
       - name: Upload verified Scorecard result
         run: |
-          echo "📤 Uploading verified Scorecard result..."
+          echo "📤 Preparing payload for Scorecard API..."
 
-          # Build correct JSON payload
+          # Safely read the results.json and embed as a string
+          RESULT_STR=$(jq -c . < ./results.json)
+
+          # Build payload with proper JSON structure
           jq -n --arg token "$OIDC_TOKEN" \
-          --arg result "$(jq -c . < ./results.json)" \
-          '{
-            accessToken: $token,
-            branch: "main",
-            result: $result,
-            tlogIndex: 0
-          }' > payload.json
+            --arg result "$RESULT_STR" \
+            '{
+              accessToken: $token,
+              branch: "main",
+              result: $result,
+              tlogIndex: 0
+            }' > payload.json
 
-          echo "Payload prepared, posting to Scorecard API..."
-          curl -v -X POST "https://api.scorecard.dev/projects/github.com/bkmgdotcom/sam123" \
+          echo "📄 Payload ready. Preview first 20 lines:"
+          head -20 payload.json
+
+          echo "📤 Uploading verified Scorecard result..."
+          curl -v \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $OIDC_TOKEN" \
-            --data-binary "@payload.json"
+            --data-binary "@payload.json" \
+            "https://api.scorecard.dev/projects/github.com/bkmgdotcom/sam123"
+
