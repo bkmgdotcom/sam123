@@ -69,3 +69,22 @@ jobs:
 #        uses: github/codeql-action/upload-sarif@v3
 #        with:
 #          sarif_file: results.sarif
+
+      - name: Publish to Scorecard.dev
+        env:
+          OIDC_TOKEN: "NONE"
+          ORG: "HMHODD"
+          REPO: "takeatest"
+        run: |
+          echo "Uploading verified Scorecard result..."
+          curl -X POST \
+            -H "Authorization: Bearer ${OIDC_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d @- https://api.scorecard.dev/projects/github.com/${ORG}/${REPO} <<EOF
+          {
+            "accessToken": "${OIDC_TOKEN}",
+            "branch": "main",
+            "result": "$(jq -c . < ./results.json)",
+            "tlogIndex": 0
+          }
+          EOF
