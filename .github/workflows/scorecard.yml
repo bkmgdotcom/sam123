@@ -36,6 +36,9 @@ jobs:
            
       - name: "Run analysis"
         uses: ossf/scorecard-action@f49aabe0b5af0936a0987cfb85d86b75731b0186 # v2.4.1
+        env:
+          GITHUB_REPOSITORY: "nicejob/nicerepo"
+          GITHUB_REPOSITORY_OWNER: "nicejob"
         with:
           results_file: results.json
           results_format: json
@@ -53,8 +56,6 @@ jobs:
           #   - `publish_results` will always be set to `false`, regardless
           #     of the value entered here.
           publish_results: true
-          GITHUB_REPOSITORY: "nicejob/nicerepo"
-          GITHUB_REPOSITORY_OWNER: "nicejob"
 
     #  - name: search and replace
     #    run: |
