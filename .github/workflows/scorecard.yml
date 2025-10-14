@@ -30,6 +30,10 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Display ENV
+        run: |
+           env
+           
       - name: "Run analysis"
         uses: ossf/scorecard-action@f49aabe0b5af0936a0987cfb85d86b75731b0186 # v2.4.1
         with:
@@ -86,7 +90,7 @@ jobs:
 
           echo "OIDC_TOKEN=$TOKEN" >> $GITHUB_ENV
           echo "✅ Token successfully retrieved."
-          echo "$TOKEN" | cut -d. -f2 | base64 -d | jq
+          echo "$TOKEN" | cut -d. -f2 | jq
 
 
 
