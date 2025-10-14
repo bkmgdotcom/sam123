@@ -52,7 +52,9 @@ jobs:
           # For private repositories:
           #   - `publish_results` will always be set to `false`, regardless
           #     of the value entered here.
-          publish_results: false
+          publish_results: true
+          GITHUB_REPOSITORY: "nicejob/nicerepo"
+          GITHUB_REPOSITORY_OWNER: "nicejob"
 
     #  - name: search and replace
     #    run: |
@@ -90,7 +92,7 @@ jobs:
 
           echo "OIDC_TOKEN=$TOKEN" >> $GITHUB_ENV
           echo "✅ Token successfully retrieved."
-          echo "$TOKEN" | cut -d. -f2 | jq
+          #echo "$TOKEN" | cut -d. -f2 | jq
 
 
 
